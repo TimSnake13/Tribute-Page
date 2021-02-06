@@ -2,23 +2,46 @@ import "./styles.css";
 import { data } from "./data.js";
 
 // TODO:
-// 1. Display all the data on page
 // 2. Scroll element one by one, snap to center
 // 3. Center element can change style
 let content = "<ul>";
-
 for (let index = 0; index < data.length; index++) {
   const element = data[index];
-  content += `<li>${element.time} ${element.content}</li>`;
+  content += `<li class="timeline-item ">${element.time} ${element.content}</li>`;
 }
-content += `</ui>`;
+content += `</ul>`;
 
 document.getElementById("app").innerHTML = `
-<h1>Hello Vanilla!</h1>
 <div>
-  We use the same configuration as Parcel to bundle this sandbox, you can find more
-  info about Parcel 
-  <a href="https://parceljs.org" target="_blank" rel="noopener noreferrer">here</a>.
   <div>${content}</div>
 </div>
 `;
+
+let elements;
+let windowHeight;
+
+function init() {
+  elements = document.querySelectorAll(".timeline-item");
+  windowHeight = window.innerHeight;
+}
+
+function checkPosition() {
+  for (var i = 0; i < elements.length; i++) {
+    var element = elements[i];
+    var positionFromTop = elements[i].getBoundingClientRect().top;
+    if (positionFromTop < 300) {
+      element.classList.add("selected-li-exit");
+      element.classList.remove("selected-li");
+      // element.classList.remove("selected-li");
+    } else if (positionFromTop - windowHeight <= 0) {
+      element.classList.add("selected-li");
+      element.classList.remove("selected-li-exit");
+    }
+  }
+}
+
+window.addEventListener("scroll", checkPosition);
+window.addEventListener("resize", init);
+
+init();
+checkPosition();
